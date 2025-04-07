@@ -69,6 +69,7 @@ V(mutex);
 c. Modifique su solución para el caso que haya tres detectores.
 ```ada
 sem mutex= 3;
+
 process Detector[id:0..N-1]{
  P(mutex);
   //Usar detector
@@ -86,6 +87,7 @@ orden).
 sem mutex= 1;
 queue fallos[N];
 int cant= 0;
+
 process Controlador[id:0..3]{
 Fallo f;
 int nivel;
@@ -105,9 +107,65 @@ V(mutex)
 ```
 b. Se debe calcular la cantidad de fallos por nivel de gravedad, debiendo quedar los
 resultados en un vector global.
+```ada
+sem mutex = 1;
+queue fallos [n];
+int cant = 0;
+array cantFallos[4]= ([4] 0);
 
+process Controlador (id:0..3){
+Fallo f;
+int nivel;
+P(mutex)
+while (cant < n){
+   f= fallos.pop();
+   cant ++
+   V(mutex);
+   nivel= f.getNivel();
+   if (nivel == 3){
+     print (f.getNivel());
+   }
+ P(semNivel)
+  cantFallos[nivel]++;
+ V(semNivel)
+ P(mutex);
+}
+V(mutex)
+}
+```
 c. Ídem b) pero cada proceso debe ocuparse de contar los fallos de un nivel de gravedad
 determinado.
+```ada
+sem mutex = 1;
+int cant= 0;
+queue fallos[N];
+array cantFallos[4]= ([4] 0);
+
+process Controlador (id:0..3){
+Fallo f;
+int nivel;
+P(mutex)
+while (cant < N){
+  f= fallos.pop();
+  cant++;
+  V(mutex)
+  nivel= f.getNivel();
+  if(nivel == 3){
+  print(f.getID);
+}
+  if(nivel == Id){
+    cantFallos[id]++;
+ }else{
+  P(mutex)
+   fallos.push(f);
+   cant--
+  V(mutex)
+ }
+ P(mutex)
+}
+V(mutex)
+}
+```
 
 
 
