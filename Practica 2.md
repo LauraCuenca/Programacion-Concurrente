@@ -166,6 +166,74 @@ while (cant < N){
 V(mutex)
 }
 ```
+4. En una empresa de logística de paquetes existe una sala de contenedores donde se
+preparan las entregas. Cada contenedor puede almacenar un paquete y la sala cuenta con
+capacidad para N contenedores. Resuelva considerando las siguientes situaciones:
+a. La empresa cuenta con 2 empleados: un empleado Preparador que se ocupa de
+preparar los paquetes y dejarlos en los contenedores; un empelado Entregador que
+se ocupa de tomar los paquetes de los contenedores y realizar la entregas. Tanto el
+Preparador como el Entregador trabajan de a un paquete por vez.
+
+queue Paquete[N];
+Sem vacio= 1;
+Sem lleno= 0;
+
+```ada
+Process Preparador{
+  Paquete paquete;
+  while (true){
+    // preparo paquete
+    P(Vacio);
+     Paquete.push(paquete);
+    V(lleno);
+  }
+}
+```
+```ada
+Process Entregador{
+  while (true){
+    P(lleno);
+     Paquete.pop(paquete);
+    V(vacio);
+    // entrego paquete
+  }
+}
+```
+b. Modifique la solución a) para el caso en que haya P Preparadores y E Entregadores.
+```
+queue Paquete[N];
+Sem accesoColaP= 1;
+Sem accesoColaE= 1;
+Sem vacio=1;
+Sem lleno=0;
+```
+```ada
+Process Preparador [id:0..P-1]{
+  while (true){
+    //preparar paquete
+    P(vacio);
+     P(accesoColaP)
+       Paquete.push(paquete);
+     V(accesoColaP)
+    V(lleno);
+  }
+}
+```
+```ada
+Process Entregador [id:0..E-1]{
+  while (true){
+    P(lleno);
+     P(accesoColaE)
+       Paquete.pop(paquete);
+     V(accesoColaE)
+    V(vacio);
+     //entregar paquete
+  }
+}
+```
+
+
+
 
 
 
